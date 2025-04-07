@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .viewer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .nav-buttons {
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #page-info {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Viewer</h1>
+    
+    <div class="viewer-container">
+        <canvas id="pdf-render"></canvas>
+    </div>
+
+    <div class="nav-buttons">
+        <button id="prev-page">Previous</button>
+        <span id="page-info">Page <span id="page-num"></span> of <span id="page-count"></span></span>
+        <button id="next-page">Next</button>
+    </div>
+
+    <script>
+        const url = "{{ url_for('uploaded_file', filename=filename) }}";
+
+        let pdfDoc = null,
+            pageNum = 1,
+            pageIsRendering = false,
+            pageNumPending = null,
+            scale = 1.5,
+            canvas = document.querySelector('#pdf-render'),
+            ctx = canvas.getContext('2d');
+
+        // Load PDF
+        pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+            pdfDoc = pdfDoc_;
+            document.querySelector('#page-count').textContent = pdfDoc.numPages;
+            renderPage(pageNum);
+        });
+
+        // Render the page
+        function renderPage(num) {
+            pageIsRendering = true;
+            pdfDoc.getPage(num).then(page => {
+                let viewport = page.getViewport({ scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                let renderCtx = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                return page.render(renderCtx).promise;
+            }).then(() => {
+                pageIsRendering = false;
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            });
+
+            document.querySelector('#page-num').textContent = num;
+        }
+
+        // Prev page
+        document.querySelector('#prev-page').addEventListener('click', () => {
+            if (pageNum <= 1) return;
+            pageNum--;
+            renderPage(pageNum);
+        });
+
+        // Next page
+        document.querySelector('#next-page').addEventListener('click', () => {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            renderPage(pageNum);
+        });
+    </script>
+</body>
+</html>

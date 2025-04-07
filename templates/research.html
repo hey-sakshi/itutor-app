@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Materials</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .paper-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .paper-card h3 {
+            color: #007bff;
+        }
+        .paper-card a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .paper-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Resource Materials</h1>
+        <form id="researchForm" class="d-flex justify-content-center mb-4">
+            <input type="text" id="topic" name="topic" class="form-control w-50" placeholder="Enter topic" required>
+            <button type="submit" class="btn btn-primary ms-2">Search</button>
+        </form>
+        <div id="results" class="row"></div>
+    </div>
+
+    <script>
+        document.getElementById('researchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const topic = document.getElementById('topic').value;
+
+            fetch('/research', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ topic: topic })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = '';
+
+                if (data.error) {
+                    resultsDiv.innerHTML = `<p class="text-danger">Error: ${data.error}</p>`;
+                } else {
+                    let count = 0;
+                    let rowDiv;
+                    data.papers.forEach((paper, index) => {
+                        if (count % 2 === 0) {
+                            rowDiv = document.createElement('div');
+                            rowDiv.className = 'row';
+                            resultsDiv.appendChild(rowDiv);
+                        }
+
+                        const colDiv = document.createElement('div');
+                        colDiv.className = 'col-md-6';
+                        colDiv.innerHTML = `
+                            <div class="paper-card">
+                                <h3><a href="${paper.link}" target="_blank">${paper.title}</a></h3>
+                                <p>${paper.snippet}</p>
+                            </div>
+                        `;
+                        rowDiv.appendChild(colDiv);
+                        count++;
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

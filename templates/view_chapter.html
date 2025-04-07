@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Chapter</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+</head>
+<body>
+    <h1>Viewing Chapter</h1>
+
+    <!-- PDF Viewer -->
+    <div>
+        <canvas id="pdf-canvas"></canvas>
+    </div>
+
+    <div>
+        <button id="prev">Previous Page</button>
+        <button id="next">Next Page</button>
+    </div>
+
+    <script>
+        const url = "{{ url_for('serve_pdf', filename=filename) }}";
+        let pdfDoc = null,
+            pageNum = 1,
+            pageIsRendering = false,
+            scale = 1.5;
+
+        // Load the PDF
+        pdfjsLib.getDocument(url).promise.then(function (doc) {
+            pdfDoc = doc;
+            renderPage(pageNum);
+        });
+
+        // Render a page
+        function renderPage(num) {
+            pageIsRendering = true;
+            pdfDoc.getPage(num).then(function (page) {
+                const canvas = document.getElementById('pdf-canvas');
+                const context = canvas.getContext('2d');
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise.then(function () {
+                    pageIsRendering = false;
+                });
+            });
+        }
+
+        // Button for next page
+        document.getElementById('next').addEventListener('click', function () {
+            if (pageNum < pdfDoc.numPages) {
+                pageNum++;
+                renderPage(pageNum);
+            }
+        });
+
+        // Button for previous page
+        document.getElementById('prev').addEventListener('click', function () {
+            if (pageNum > 1) {
+                pageNum--;
+                renderPage(pageNum);
+            }
+        });
+    </script>
+</body>
+</html>

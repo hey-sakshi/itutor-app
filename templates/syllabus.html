@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syllabus</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #eef1f5, #dfe4ea);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #2c3e50;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        #container {
+            display: flex;
+            margin: 20px auto;
+            max-width: 95%;
+            background: #fff;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #index {
+            width: 30%;
+            padding: 20px;
+            background: #f8f9fa;
+            border-right: 2px solid #ddd;
+            position: sticky;
+            top: 10px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #index h3 {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        #index ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #index li {
+            padding: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 5px;
+        }
+
+        #index li a {
+            text-decoration: none;
+            color: #3498db;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        #index li:hover {
+            background: #eaf2f8;
+            transform: translateX(5px);
+        }
+
+        #index li:hover a {
+            color: #1abc9c;
+        }
+
+        #viewer {
+            width: 70%;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        iframe {
+            width: 100%;
+            height: 80vh;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scrollbar styling */
+        #index::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #index::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 10px;
+        }
+
+        #index::-webkit-scrollbar-thumb:hover {
+            background: #1abc9c;
+        }
+
+        #index::-webkit-scrollbar-track {
+            background: #ecf0f1;
+        }
+
+        @media (max-width: 768px) {
+            #container {
+                flex-direction: column;
+            }
+
+            #index, #viewer {
+                width: 100%;
+                padding: 15px;
+            }
+
+            iframe {
+                height: 60vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Organized Syllabus</h1>
+    <div id="container">
+        <div id="index">
+            <h3>Index</h3>
+            <ul>
+                {% for item in pdf_index %}
+                <li>
+                    {{ item.title }}
+                    {% if item.page %}
+                        <a href="#page{{ item.page }}">Page {{ item.page }}</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="viewer">
+            <iframe src="{{ file_url }}"></iframe>
+        </div>
+    </div>
+</body>
+</html>

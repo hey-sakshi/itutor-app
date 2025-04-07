@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Syllabus</title>
+    <style>
+        /* Global styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Glassmorphism container */
+.container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 420px;
+    transition: 0.3s ease-in-out;
+}
+
+.container:hover {
+    transform: scale(1.02);
+}
+
+/* File input styling */
+input[type="file"] {
+    padding: 12px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    display: block;
+    border: none;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+input[type="file"]:hover {
+    background: #f1f1f1;
+}
+
+/* Buttons container */
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Button styling */
+button {
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Gradient buttons */
+button:nth-child(1) {
+    background: linear-gradient(to right, #28a745, #20c997);
+}
+button:nth-child(2) {
+    background: linear-gradient(to right, #ff9800, #ff5722);
+}
+button:nth-child(3) {
+    background: linear-gradient(to right, #e91e63, #ff4081);
+}
+
+/* Button Hover Effects */
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    transform: scale(0.98);
+    box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .container {
+        padding: 1.5rem;
+    }
+}
+    </style>
+</head>
+<body>
+    
+
+    <div class="container">
+        <form id="uploadForm" method="POST" enctype="multipart/form-data">
+            <input type="file" id="fileInput" name="file" accept=".pdf" required>
+            
+            <div class="buttons-container">
+                <button type="button" onclick="submitForm('/read_now')">Read Now</button>
+                <button type="button" onclick="submitForm('/quiz_now')">Generate Question Paper</button>
+                <button type="button" onclick="submitForm"{{ url_for('generate_mcq_quiz') }}">MCQ Test</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function submitForm(action) {
+            let form = document.getElementById("uploadForm");
+            let fileInput = document.getElementById("fileInput");
+
+            if (fileInput.files.length === 0) {
+                alert("Please select a PDF file first!");
+                return;
+            }
+
+            form.action = action;
+            form.submit();
+        }
+    </script>
+</body>
+</html>

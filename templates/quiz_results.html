@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        form {
+            margin-top: 20px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        #chart {
+            margin: 20px auto;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz Results</h1>
+        <p>Your score: {{ results.score }} / {{ results.total }}</p>
+        <div id="chart"></div>
+
+        <h2>Detailed Results</h2>
+        <ul>
+            {% for result in results.results %}
+            <li>
+                <strong>Question:</strong> {{ result.question }}<br>
+                <strong>Your Answer:</strong> {{ result.user_answer }}<br>
+                <strong>Correct Answer:</strong> {{ result.correct_answer }}<br>
+                <strong>Status:</strong> {{ 'Correct' if result.is_correct else 'Incorrect' }}
+            </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Recommended Study Schedule</h2>
+        <ul>
+            {% for day in results.study_schedule %}
+                <li>
+                    <strong>Day {{ day.day }}:</strong> {{ day.topic }}
+                    <ul>
+                        {% for task in day.tasks %}
+                            <li>{{ task }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Generate a Detailed Study Plan</h2>
+        <form action="{{ url_for('generate_study_plan') }}" method="POST">
+            <label for="topics">Topics to Cover (comma-separated):</label>
+            <input type="text" id="topics" name="topics" required>
+
+            <label for="deadline">Deadline (YYYY-MM-DD):</label>
+            <input type="date" id="deadline" name="deadline" required>
+
+            <label for="hours_per_day">Study Hours Per Day:</label>
+            <input type="number" id="hours_per_day" name="hours_per_day" min="1" required>
+
+            <button type="submit">Generate Study Plan</button>
+        </form>
+    </div>
+
+    <script>
+        var results = JSON.parse('{{ results | tojson | safe }}');  
+        var score = results.score;
+        var total = results.total;
+
+        var data = [{
+            values: [score, total - score],
+            labels: ['Correct', 'Incorrect'],
+            type: 'pie'
+        }];
+
+        Plotly.newPlot('chart', data);
+    </script>
+</body>
+</html>

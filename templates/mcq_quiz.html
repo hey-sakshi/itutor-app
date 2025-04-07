@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+        <h1 class="text-2xl font-bold text-center mb-4 text-blue-600">MCQ Quiz</h1>
+        
+        <form action="{{ url_for('submit_quiz') }}" method="post" class="space-y-6">
+            {% for mcq in mcqs %}
+            <div class="bg-gray-50 p-4 rounded-lg shadow">
+                <p class="font-medium text-lg mb-2">{{ mcq.question }}</p>
+                <div class="space-y-2">
+                    {% for option in mcq.options %}
+                    <label class="flex items-center space-x-2 p-2 bg-white border rounded cursor-pointer hover:bg-blue-50">
+                        <input type="radio" name="question_{{ loop.index0 }}" value="{{ option }}" class="accent-blue-500">
+                        <span>{{ option }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Submit
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>

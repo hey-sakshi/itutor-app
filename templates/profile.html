@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(120deg, #f0f4f8, #d9e9f2);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background: #3d5a80;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+        }
+
+        h2 {
+            color: #1d3557;
+            margin-bottom: 10px;
+        }
+
+        .profile-info {
+            text-align: left;
+            padding: 10px;
+        }
+
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .profile-info strong {
+            color: #3d5a80;
+        }
+
+        form {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #3d5a80;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #1d3557;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="avatar">{{ user['name'][0] }}</div>
+        <h2>{{ user['name'] }}</h2>
+        <p>{{ user['email'] }}</p>
+        <div class="profile-info">
+            <p><strong>Interests:</strong> {{ user['interests'] }}</p>
+        </div>
+        <form action="/update_profile" method="POST">
+            <label for="name">Update Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter new name" value="{{ user['name'] }}">
+            
+            <label for="email">Update Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter new email" value="{{ user['email'] }}">
+            
+            <label for="interests">Update Interests:</label>
+            <input type="text" id="interests" name="interests" placeholder="Enter new interests (comma-separated)" value="{{ user['interests'] }}">
+            
+            <button type="submit">Update Profile</button>
+        </form>
+    </div>
+</body>
+</html>

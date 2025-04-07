@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(120deg, #f5f7fa, #c3cfe2);
+            animation: gradientBackground 15s infinite alternate;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientBackground {
+            0% { background: linear-gradient(120deg, #f5f7fa, #c3cfe2); }
+            50% { background: linear-gradient(120deg, #e6eef8, #d9e4ee); }
+            100% { background: linear-gradient(120deg, #f5f7fa, #c3cfe2); }
+        }
+
+        /* Navbar styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            color: #3d5a80;
+            font-weight: bold;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #3d5a80;
+            font-size: 1rem;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #1d3557;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #457b9d;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .profile-name {
+            font-size: 1rem;
+            color: #3d5a80;
+            font-weight: 500;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .profile-dropdown a {
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #3d5a80;
+            font-size: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background 0.3s;
+        }
+
+        .profile-dropdown a:hover {
+            background: #f5f7fa;
+        }
+
+        .profile-container:hover .profile-dropdown {
+            display: flex;
+        }
+
+        /* Dashboard container */
+        .dashboard-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1d3557;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #457b9d;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #3d5a80;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+
+        .button:hover {
+            background: #1d3557;
+            transform: translateY(-2px);
+        }
+
+        .options-section {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Ensures responsiveness */
+    padding: 20px;
+}
+
+.option-card {
+    width: 250px; /* Adjust as needed */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+
+        .option-card h2 {
+            font-size: 1.5rem;
+            color: #1d3557;
+            margin-bottom: 15px;
+        }
+
+        .option-card p {
+            font-size: 1rem;
+            color: #457b9d;
+            margin-bottom: 20px;
+        }
+
+        .option-card a {
+            text-decoration: none;
+            color: #fff;
+            background: #3d5a80;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .option-card a:hover {
+            background: #1d3557;
+        }
+
+        .option-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* About Us Section - Two Column Layout */
+        .about-container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .about-image {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-content {
+            flex: 1;
+            max-width: 50%;
+            text-align: left;
+        }
+
+        .about-content h2 {
+            font-size: 2rem;
+            color: #1d3557;
+            margin-bottom: 20px;
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            color: #457b9d;
+            line-height: 1.6;
+        }
+
+        /* Reviews Section - Grid Layout */
+        .reviews-section {
+            background: #f5f7fa;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .reviews-section h2 {
+            font-size: 2rem;
+            color: #1d3557;
+            margin-bottom: 30px;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .review-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .review-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .review-card h3 {
+            font-size: 1.2rem;
+            color: #1d3557;
+            margin-bottom: 10px;
+        }
+
+        .review-card p {
+            font-size: 0.9rem;
+            color: #457b9d;
+        }
+
+        /* Footer */
+        footer {
+            background: #1d3557;
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        footer h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #c3cfe2;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .navbar h1 {
+                font-size: 1.5rem;
+            }
+
+            .navbar a {
+                font-size: 0.9rem;
+                margin: 0 10px;
+            }
+
+            .options-section {
+                grid-template-columns: 1fr;
+            }
+
+            .about-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .about-image, .about-content {
+                max-width: 100%;
+            }
+
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>Itutor</h1>
+        <div>
+            {% if user %}
+                <div class="profile-container">
+                    <div class="profile-icon">{{ user['name'][0] }}</div>
+                    <div class="profile-name">{{ user['name'] }}</div>
+                    <div class="profile-dropdown">
+                        <a href="/profile">View Profile</a>
+                        <a href="/logout">Logout</a>
+                        <a href="{{ url_for('research_page') }}">Search Resources</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/signup">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        {% if user %}
+            <img src="static/images/elif7.png">
+
+            <!-- Options Section - 2x2 Grid Layout -->
+            <div class="options-section">
+                <div class="option-card">
+                    <img src="static/images/elif1.jpg" alt="Research Papers">
+                    <h2>Resource Papers</h2>
+                    <p>Access papers.</p>
+                    <a href="{{ url_for('research_page') }}">Search Resources</a>
+                </div>
+                <div class="option-card">
+                    <img src="static/images/elif3.png" alt="Take MCQs">
+                    <h2>Take MCQs</h2>
+                    <p>Practice multiple-choice questions online.</p>
+                    <a href="{{ url_for('generate_mcq_quiz') }}">Start MCQs</a>
+                </div>
+                <div class="option-card">
+                    <img src="static/images/elif4.jpg" alt="Upload Syllabus">
+                    <h2>Upload Syllabus</h2>
+                    <p>Upload and manage your course syllabus.</p>
+                    <a href="/upload_syllabus">Upload</a>
+                </div>
+            </div>
+
+            <!-- About Us Section - Two Column Layout -->
+            <div class="about-container">
+                <div class="about-image">
+                    <img src="static/images/elif.png" alt="About Us Image">
+                </div>
+                <div class="about-content">
+                    <h2>About Us</h2>
+                    <p>Itutor is a leading online learning platform dedicated to providing high-quality education and resources to students worldwide. Our mission is to make learning accessible, engaging, and effective for everyone. With a wide range of courses and tools, we aim to empower students to achieve their academic goals.</p>
+                    <p>We believe in the power of education to transform lives and are committed to helping students unlock their full potential. Join us today and take the first step towards a brighter future!</p>
+                </div>
+            </div>
+
+            <!-- Reviews Section - Grid Layout -->
+            <div class="reviews-section">
+                <h2>What Our Users Say</h2>
+                <div class="reviews-grid">
+                    <div class="review-card">
+                        <img src="static/images/elif5.jpg" alt="User 1">
+                        <h3>John Doe</h3>
+                        <p>"Itutor has transformed the way I learn. Highly recommended!"</p>
+                    </div>
+                    <div class="review-card">
+                        <img src="static/images/elif6.png" alt="User 2">
+                        <h3>Jane Smith</h3>
+                        <p>"The question paper generator is a game-changer. Love it!"</p>
+                    </div>
+                    <div class="review-card">
+                        <img src="https://via.placeholder.com/80" alt="User 3">
+                        <h3>Alice Johnson</h3>
+                        <p>"Amazing platform for research and learning. 5 stars!"</p>
+                    </div>
+                    <div class="review-card">
+                        <img src="https://via.placeholder.com/80" alt="User 4">
+                        <h3>Michael Brown</h3>
+                        <p>"The MCQ practice tests are incredibly helpful for exam preparation."</p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <h1>Welcome to Itutor</h1>
+            <p>Your personalized learning assistant!</p>
+            <a href="/login" class="button">Login</a>
+            <a href="/signup" class="button">Sign Up</a>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <h2>Contact Us</h2>
+        <p>Email: <a href="mailto:support@itutor.com">support@itutor.com</a></p>
+        <p>Phone: <a href="tel:+1234567890">+1 234 567 890</a></p>
+        <p>Address: 123 Learning St, Knowledge City</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

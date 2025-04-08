@@ -2,3 +2,4 @@ flask
 flask-pymongo
 nltk
 spacy
+PyPDF2

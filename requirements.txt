@@ -4,3 +4,4 @@ nltk
 spacy
 PyPDF2
 beautifulsoup4
+google-auth

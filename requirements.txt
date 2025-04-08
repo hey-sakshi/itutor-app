@@ -3,3 +3,4 @@ flask-pymongo
 nltk
 spacy
 PyPDF2
+beautifulsoup4

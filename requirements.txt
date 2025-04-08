@@ -9,3 +9,4 @@ google-api-python-client
 fpdf
 google-generativeai
 transformers
+pdfplumber

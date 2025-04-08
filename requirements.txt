@@ -12,3 +12,4 @@ transformers
 pdfplumber
 torch
 tensorflow
+flask>=2.0.0

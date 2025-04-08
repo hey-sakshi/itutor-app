@@ -10,3 +10,5 @@ fpdf
 google-generativeai
 transformers
 pdfplumber
+torch
+tenserflow

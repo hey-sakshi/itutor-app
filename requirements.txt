@@ -11,4 +11,4 @@ google-generativeai
 transformers
 pdfplumber
 torch
-tenserflow
+tensorflow
